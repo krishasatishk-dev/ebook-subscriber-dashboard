@@ -1,0 +1,19 @@
+# macOS junk
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# Large / non-essential source files (keep the raw CSV)
+*.numbers
+*.zip
+
+# Editors / IDE
+.vscode/
+.idea/
