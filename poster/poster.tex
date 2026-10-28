@@ -1,0 +1,376 @@
+% HITA 2026 poster — "Engagement Scoring and Status Segmentation of eBook
+% Subscribers using Exploratory Data Analysis"
+% Frame: Unofficial University of Cambridge Poster Template
+% https://github.com/andiac/gemini-cam (fork of gemini)
+
+\documentclass[final]{beamer}
+% ====================
+% Packages
+% ====================
+
+% \usepackage[T1]{fontenc}
+% \usepackage{lmodern}
+
+% ====================
+% Fonts
+% ====================
+\usepackage{fontspec}
+\usefonttheme{professionalfonts}
+\setmainfont{TeX Gyre Heros}
+\renewcommand{\familydefault}{\sfdefault}
+
+\setbeamerfont{normal text}{family=\sffamily}
+\setbeamerfont{block title}{family=\sffamily,series=\bfseries}
+\setbeamerfont{block body}{family=\sffamily}
+\setbeamerfont{headline}{family=\sffamily,series=\bfseries}
+\setbeamerfont{footline}{family=\sffamily}
+\setbeamerfont{caption}{family=\sffamily}
+
+\usepackage[orientation=portrait,size=custom,width=84,height=118,scale=1.0]{beamerposter}
+\usetheme{gemini}
+
+% No visible link boxes in the printed PDF
+\hypersetup{hidelinks}
+
+%=======================
+% FONT SETTINGS
+%=======================
+% Poster Title
+\setbeamerfont{title}{
+    family=\sffamily,
+    series=\bfseries,
+    size=\fontsize{68}{76}\selectfont
+}
+% Authors
+\setbeamerfont{author}{
+    family=\sffamily,
+    size=\fontsize{34}{40}\selectfont
+}
+% Affiliations
+\setbeamerfont{institute}{
+    family=\sffamily,
+    size=\fontsize{28}{34}\selectfont
+}
+% Section Headings
+\setbeamerfont{block title}{
+    family=\sffamily,
+    series=\bfseries,
+    size=\fontsize{40}{46}\selectfont
+}
+% Highlighted Section Headings
+\setbeamerfont{block title alerted}{
+    family=\sffamily,
+    series=\bfseries,
+    size=\fontsize{40}{46}\selectfont
+}
+% Body Text
+\setbeamerfont{normal text}{
+    family=\sffamily,
+    size=\fontsize{28}{34}\selectfont
+}
+% Figure/Table Captions
+\setbeamerfont{caption}{
+    family=\sffamily,
+    size=\fontsize{22}{26}\selectfont
+}
+
+\usecolortheme{nott}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.14}
+\usepackage{anyfontsize}
+\usepackage[table]{xcolor}
+\usepackage{caption}
+
+% ====================
+% Lengths
+% ====================
+% If you have N columns, choose \sepwidth and \colwidth such that
+% (N+1)*\sepwidth + N*\colwidth = \paperwidth
+\newlength{\sepwidth}
+\newlength{\colwidth}
+\setlength{\sepwidth}{0.025\paperwidth}
+\setlength{\colwidth}{0.45\paperwidth}
+\newcommand{\separatorcolumn}{\begin{column}{\sepwidth}\end{column}}
+
+% ====================
+% Title
+% ====================
+
+\title{Engagement Scoring and Status Segmentation \\ of eBook Subscribers using \\ Exploratory Data Analysis}
+
+\author{Author 1* \inst{1} \and Author 2 \inst{2} \and Author 3 \inst{3} \and Author 4 \inst{4} \and Author 5 \inst{5}}
+
+\institute[shortinst]{
+\inst{1--5} Affiliation (to be added) \\[0.6em]
+\small\itshape
+Presented at HITA 2026, International Conference on Hybrid Intelligence: Theories and Applications,\\
+School of Technology Management \& Engineering,
+Navi-Mumbai, India, October 30--31, 2026.
+}
+
+% ====================
+% Footer (optional)
+% ====================
+\footercontent{
+  \href{}{}
+  \hfill
+  HITA 2026, STME Navi-Mumbai, India, October 30--31, 2026 \hfill
+  \href{}{E-mail ID: (to be added)}
+% (can be left out to remove footer)
+}
+
+
+% ====================
+% Logo (optional)
+% ====================
+
+% use this to include logos on the left and/or right side of the header:
+\logoright{\includegraphics[height=11cm]{logos/HITA_2026.png}}
+\logoleft{\includegraphics[height=10cm]{logos/NMIMS Logo.png}}
+
+% ====================
+% Body
+% ====================
+
+\begin{document}
+
+\begin{frame}[t]
+\begin{columns}[t]
+\separatorcolumn
+
+\begin{column}{\colwidth}
+
+% Motivation Section
+\begin{block}{\textbf{Motivation}}
+\begin{itemize}
+\justifying
+    \item Digital subscription platforms run on \textbf{recurring revenue}: keeping existing subscribers is far cheaper than acquiring new ones, and usage is both an antecedent and a consequence of satisfaction \cite{bolton1999}.
+    \item Platforms nevertheless often treat all subscribers identically, deploying \textbf{generic retention campaigns} even though behavioural signals separate engaged readers from those at risk \cite{coussement2008,vuorinen2024}.
+    \item \textbf{Research question:} which behavioural and demographic signals distinguish high-engagement from low-engagement eBook subscribers, and what should the platform do about each group?
+    \item \textbf{Phase 1} (customer file): a subscription-propensity view of 16,404 unique customers (115 duplicate IDs removed), 33.2\% subscribers. \textbf{Phase 2} (engagement file): score 5,455 subscribers and assign an Active / Inactive / Churned status.
+\end{itemize}
+\end{block}
+
+% Proposed Methodology Section
+\begin{block}{\textbf{Proposed Methodology}}
+
+\begin{center}
+\begin{tikzpicture}[
+  flow/.style={draw=nottblue, line width=1.6pt, rounded corners=8pt,
+               fill=nottblue, text=white, minimum height=2.6cm,
+               text width=6.2cm, align=center, inner sep=8pt,
+               font=\bfseries\fontsize{28}{34}\selectfont},
+  flowalt/.style={flow, fill=white, text=nottblue},
+  link/.style={-{Stealth[length=7mm]}, line width=2.4pt, draw=nottblue}
+]
+\node[flow]     (files) {Two raw files};
+\node[flowalt, right=1.9cm of files] (clean) {Clean rules C1--C10};
+\node[flow, right=1.9cm of clean] (join) {Join on Customer ID};
+\node[flowalt, right=1.9cm of join] (eda) {EDA};
+\node[flow, below=1.7cm of eda] (score) {Engagement score 0--100};
+\node[flowalt, left=1.9cm of score] (status) {Status rules};
+\node[flow, left=1.9cm of status] (recs) {Recommendations};
+\draw[link] (files) -- (clean);
+\draw[link] (clean) -- (join);
+\draw[link] (join)  -- (eda);
+\draw[link] (eda)   -- (score);
+\draw[link] (score) -- (status);
+\draw[link] (status) -- (recs);
+\end{tikzpicture}
+\end{center}
+
+\vspace{-0.4em}
+\captionof{figure}{End-to-end pipeline: two raw files become a cleaned, joined, scored and status-labelled subscriber base with one recommended strategy per segment.}
+\label{fig:pipeline}
+
+% Table indicating purpose of all stages
+\small
+\captionof{table}{Processing stages and their respective outputs}
+\centering
+\begin{tabular}{p{0.28\linewidth} p{0.44\linewidth}}
+\toprule
+\textbf{Stage} & \textbf{Key Output} \\
+\midrule
+Clean (C1--C10) & 5,455 unique subscriber rows \\
+Join on Customer ID & Behaviour reattached to customer profiles \\
+EDA & Distributions, correlations, null findings \\
+Engagement score & 0--100 per subscriber; terciles 40.80 / 51.25 \\
+Status rules & Active / Inactive / Churned (33 Unclassified) \\
+Recommendations & One strategy per status group \\
+\bottomrule
+\end{tabular}
+
+\end{block}
+
+% Key Research Contribution highlighted
+\begin{alertblock}{\textbf{Key Contributions}}
+
+\begin{itemize}
+\justifying
+\item A reproducible \textbf{0--100 engagement score} with a one-line justification for every weight (0.40 recency, 0.35 logins, 0.25 session minutes) and \textbf{no double-counting}: Books Accessed is excluded because it correlates $r \approx 0.88$ with logins.
+
+\item \textbf{Status rules written and approved before computation}: Active $\le$ 30 days since last activity, Inactive 31--90, Churned $>$ 90 -- each anchored to a 30-day subscription cycle, not learned from the data.
+
+\item An \textbf{interactive dashboard prototype} (Streamlit) with per-segment recommendations tied to the literature: retain Active, win back Inactive before day 90, and a win-back campaign for Churned \cite{thomas2004,gomezuribe2016}.
+\end{itemize}
+
+\end{alertblock}
+
+\end{column}
+
+\separatorcolumn
+
+\begin{column}{\colwidth}
+
+% Experimental Setup and Training protocol
+\begin{block}{\textbf{Experimental Setup \& Protocol}}
+
+\begin{itemize}
+\justifying
+\item \textbf{Dataset:} engagement file (5,500 rows; 45 duplicates removed $\rightarrow$ 5,455 subscribers) joined on Customer ID to the customer file (16,519 rows; 16,404 unique customers; 33.2\% subscribers).
+
+\item \textbf{Cleaning (C1--C10):} 26 raw genre spellings mapped to 8 genres; implausible logins / session minutes / books blanked; invalid or missing recency \textbf{never imputed} (33 subscribers stay Unclassified); 144 blank logins / session values median-filled.
+
+\item \textbf{Score:} $100 \times (0.40 \times \text{inverted recency} + 0.35 \times \text{logins} + 0.25 \times \text{session minutes})$, min--max scaled -- recency is the most direct and explainable signal of leaving, logins measure usage frequency, session minutes depth of use. Terciles: 40.80 / 51.25.
+
+\item \textbf{Status rules:} Active $\le$ 30 days and $\ge$ 1 login/month; Inactive 31--90 days; Churned $>$ 90 days.
+
+\item \textbf{Validation:} Books Accessed (not a score input) by tier; logins by status; demographic effect sizes. \textbf{Tools:} Python, pandas, NumPy, Matplotlib, Seaborn, Streamlit.
+
+\end{itemize}
+
+\end{block}
+
+\begin{block}{\textbf{Results \& Discussion}}
+
+\begin{figure}[t]
+\centering
+
+\begin{minipage}{0.49\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/f1_status_doughnut.png}
+\end{minipage}
+\hfill
+\begin{minipage}{0.49\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/f4_logins_books_by_status.png}
+\end{minipage}
+
+\caption{Most classified subscribers are Active (55.3\%), but usage collapses with status: Active average 11.7 logins/month vs 1.5 for Churned. Unclassified subscribers ($n = 33$, recency never imputed) are excluded.}
+\label{fig:status}
+
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\linewidth]{figures/f2_tier_panels.png}
+\caption{Score terciles track real behaviour: books accessed -- \textbf{not} a score input -- rises 4.1 $\rightarrow$ 9.1 $\rightarrow$ 20.2 from Low to High tier, an independent check that the score captures engagement rather than only its own ingredients.}
+\label{fig:tiers}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\begin{minipage}[t]{0.40\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/f3_corr_heatmap.png}
+
+    \vspace{0.2cm}
+
+    {\captionof{figure}{Logins and books correlate $r = 0.88$ -- the double-counting that justified excluding books from the score.}\label{fig:heat}}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.56\linewidth}
+    \centering
+    \small
+    \captionof{table}{Status summary of 5,455 subscribers (33 Unclassified shown separately)}
+    \label{tab:status}
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabular}{lccccc}
+    \toprule
+    \textbf{Status} & \textbf{n} & \textbf{\%} & \textbf{Median days} & \textbf{Mean logins} & \textbf{Mean books} \\
+    \midrule
+    Active & 3,001 & 55.3 & 5 & 11.7 & 16.1 \\
+    Inactive & 1,520 & 28.0 & 58 & 3.3 & 5.8 \\
+    \rowcolor{gray!15}
+    \textbf{Churned} & \textbf{901} & \textbf{16.6} & \textbf{152} & \textbf{1.5} & \textbf{3.6} \\
+    Unclassified & 33 & -- & -- & 9.9 & 13.1 \\
+    \bottomrule
+    \end{tabular}
+\end{minipage}
+\end{figure}
+
+\begin{itemize}
+\justifying
+    \item \textbf{Demographic differences are small}: high-value subscribers (Active + High tier) vs Churned differ by \$94.1 vs \$83.5 monthly spend ($d = 0.33$) and \$99.8k vs \$90.3k income ($d = 0.23$) -- significant, but small effects; associations, not causes.
+    \item \textbf{Genre and tenure do not separate groups}: Active rates span only 52--58\% across genres, and churn is non-monotone across tenure bands -- reported as null findings.
+    \item \textbf{Tier--status agreement is partly by construction}: recency drives both the status rule and 40\% of the score; the books panel above is the independent evidence.
+\end{itemize}
+
+\end{block}
+
+\begin{alertblock}{\textbf{Conclusion}}
+
+\begin{itemize}
+\justifying
+    \item Declining \textbf{login frequency is an early-warning signal}: future Churners still averaged 1.5 logins/month before falling silent for a median 152 days \cite{coussement2008,bolton1999}.
+    \item \textbf{Usage intensity, not demographics, separates segments} -- segment-specific strategies beat generic campaigns, and targeting must be calibrated to avoid wasteful outreach \cite{ascarza2018}.
+    \item \textbf{Personalised, behaviour-triggered win-back} beats blanket offers; sustained engagement follows content-consumption patterns \cite{gomezuribe2016,thomas2004,godinho2020,rani2023}.
+    \item \textbf{Recommendations:} \emph{Active} -- retain with personalised recommendations and watch the \textbf{11 Active subscribers already in the Low tier} (early-warning list); \emph{Inactive} -- win back before day 90 (median 58 days quiet); \emph{Churned} -- targeted win-back campaign.
+\end{itemize}
+
+\end{alertblock}
+
+\begin{block}{\textbf{Limitations \& Future Work}}
+\begin{itemize}
+\justifying
+    \item Shows \textbf{who} leaves and \textbf{when}, not \textbf{why}: no cancellation reasons or dates, so tenure views are cross-sectional, not retention curves.
+    \item Status is recency-based by definition; only the single most-read genre is recorded; 33 subscribers remain Unclassified; the dataset is synthetic, so findings illustrate the method, not market claims.
+    \item \textbf{Future:} pilot the three strategies, extend with real cancellation data, and add the Phase~1 propensity model as a second decision lens.
+\end{itemize}
+\end{block}
+
+\begin{block}{\textbf{References}}
+\vspace{-0.3em}
+\begin{thebibliography}{1}
+\justifying
+\bibitem{coussement2008}
+K.~Coussement and D.~Van den Poel, ``Churn prediction in subscription services: An application of support vector machines while comparing two parameter-selection techniques,'' \emph{Expert Systems with Applications}, vol.~34, no.~1, pp.~313--327, 2008.
+
+\bibitem{bolton1999}
+R.~N.~Bolton and K.~N.~Lemon, ``A dynamic model of customers' usage of services: Usage as an antecedent and consequence of satisfaction,'' \emph{Journal of Marketing Research}, vol.~36, no.~2, pp.~171--186, 1999.
+
+\bibitem{godinho2020}
+M.~Godinho de Matos and P.~Ferreira, ``The effect of binge-watching on the subscription of video on demand: Results from randomized experiments,'' \emph{Information Systems Research}, vol.~31, no.~4, pp.~1337--1360, 2020.
+
+\bibitem{rani2023}
+M.~Rani, ``Understanding and managing customer churning in the SVOD industry,'' Master's thesis, Universidade Cat\'{o}lica Portuguesa, 2023.
+
+\bibitem{vuorinen2024}
+P.~T.~E.~Vuorinen, B.~W.~Tatler, and F.~Keller, ``Tracking e-reading behavior: Uncovering the effects of task context, electronic experience, and motivation,'' \emph{Frontiers in Education}, vol.~8, p.~1302701, 2024.
+
+\bibitem{gomezuribe2016}
+C.~A.~Gomez-Uribe and N.~Hunt, ``The Netflix recommender system: Algorithms, business value, and innovation,'' \emph{ACM Transactions on Management Information Systems}, vol.~6, no.~4, pp.~13:1--13:19, 2016.
+
+\bibitem{thomas2004}
+J.~S.~Thomas, R.~C.~Blattberg, and E.~J.~Fox, ``Recapturing lost customers,'' \emph{Journal of Marketing Research}, vol.~41, no.~1, pp.~31--45, 2004.
+
+\bibitem{ascarza2018}
+E.~Ascarza, ``Retention futility: Targeting high-risk customers might be ineffective,'' \emph{Journal of Marketing Research}, vol.~55, no.~1, pp.~80--98, 2018.
+
+\end{thebibliography}
+
+\end{block}
+
+\end{column}
+\separatorcolumn
+
+
+
+\end{columns}
+\end{frame}
+
+\end{document}
