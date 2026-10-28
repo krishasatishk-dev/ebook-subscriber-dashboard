@@ -2,7 +2,7 @@
 
 ## The project in 5 lines
 1. Phase 2 adds usage data: 5,500 engagement rows joined to the subscriber file on Customer ID → 5,455 unique subscribers, every one matching a flag=1 record.
-2. We cleaned it with approved rules (45 exact duplicates removed, 23 genre spellings collapsed to 8, impossible values blanked then median-filled with an Imputed flag; recency never imputed).
+2. We cleaned it with approved rules (45 exact duplicates removed, 26 raw genre spellings — 23 after basic tidying of spaces and case — merged into the 8 real genres, impossible values blanked then median-filled with an Imputed flag; recency never imputed).
 3. Each subscriber gets an **Active / Inactive / Churned / Unclassified** status from approved recency thresholds, and a 0-100 **engagement score** from approved weights.
 4. Scores sort into **Low / Medium / High** tiers by terciles; everything is compared against two independent checks (books, tenure) that are not score inputs.
 5. Every result is an association in a synthetic dataset — no causation, no retention curve (no cancellation dates).

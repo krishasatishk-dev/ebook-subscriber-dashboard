@@ -17,3 +17,7 @@ venv/
 # Editors / IDE
 .vscode/
 .idea/
+
+# Raw data — never in the repo (contains names and street addresses)
+data/raw/
+/Customer Data - Customer Data.csv
