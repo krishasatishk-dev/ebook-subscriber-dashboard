@@ -1,0 +1,6 @@
+Occupation,active_n,inactive_n,churned_n,classified_n,active_pct,inactive_pct,churned_pct,small
+Management,602,256,151,1009,59.7,25.4,15.0,False
+Clerical,343,172,97,612,56.0,28.1,15.8,False
+Professional,1195,626,348,2169,55.1,28.9,16.0,False
+Skilled Manual,611,319,200,1130,54.1,28.2,17.7,False
+Manual,250,147,105,502,49.8,29.3,20.9,False

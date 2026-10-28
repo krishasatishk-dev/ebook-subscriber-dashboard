@@ -1,0 +1,6 @@
+Education Level,active_n,inactive_n,churned_n,classified_n,active_pct,inactive_pct,churned_pct,small
+Graduate Degree,506,225,119,850,59.5,26.5,14.0,False
+Bachelors,1056,505,297,1858,56.8,27.2,16.0,False
+Partial College,804,441,256,1501,53.6,29.4,17.1,False
+High School,468,254,169,891,52.5,28.5,19.0,False
+Partial High School,167,95,60,322,51.9,29.5,18.6,False

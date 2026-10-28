@@ -1,0 +1,12 @@
+# Indigo theme for the eBook Subscriber Insights app
+[theme]
+base = "light"
+primaryColor = "#3f4de6"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#dbe1ff"
+textColor = "#1a1f5c"
+font = "sans serif"
+baseRadius = "10px"
+
+[server]
+headless = true

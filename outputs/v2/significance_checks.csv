@@ -1,0 +1,10 @@
+comparison,high_value,churned,difference,difference_unit,test,p_value,effect_size,effect_size_type,plain_english
+Annual Income,99810.15,90336.73,9473.42,mean difference,Welch t-test,1.09e-08,0.233,Cohen's d,small effect (d=0.23)
+Avg Monthly Spend,94.06,83.5,10.56,mean difference,Welch t-test,1.64e-16,0.326,Cohen's d,small effect (d=0.33)
+Age,62.22,63.81,-1.59,mean difference,Welch t-test,1.88e-06,-0.2,Cohen's d,small effect (d=-0.20)
+Number of Children At Home,2.15,1.74,0.4,mean difference,Welch t-test,4.49e-08,0.219,Cohen's d,small effect (d=0.22)
+Occupation: Management,21.5,16.8,4.8,percentage points,chi-square,0.00411,0.055,Cramér's V,negligible effect (V=0.06)
+Education Level: Graduate Degree,18.0,13.2,4.8,percentage points,chi-square,0.00173,0.06,Cramér's V,negligible effect (V=0.06)
+AgeGroup: 1960-1969,55.1,45.8,9.3,percentage points,chi-square,6.24e-06,0.087,Cramér's V,negligible effect (V=0.09)
+Genre Preference: Fantasy,13.3,10.4,2.9,percentage points,chi-square,0.0373,0.04,Cramér's V,negligible effect (V=0.04)
+(note),1803.0,901.0,,,,,,,"With these sample sizes (n=1803 vs 901) small gaps can be significant while still being practically small — read the effect size, not just the p-value."

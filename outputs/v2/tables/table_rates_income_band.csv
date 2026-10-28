@@ -1,0 +1,6 @@
+IncomeBand,active_n,inactive_n,churned_n,classified_n,active_pct,inactive_pct,churned_pct,small
+Q5,1076,486,270,1832,58.7,26.5,14.7,False
+Q2,436,217,119,772,56.5,28.1,15.4,False
+Q4,686,370,218,1274,53.8,29.0,17.1,False
+Q3,490,264,176,930,52.7,28.4,18.9,False
+Q1,313,183,118,614,51.0,29.8,19.2,False

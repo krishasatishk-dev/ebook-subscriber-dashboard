@@ -1,0 +1,10 @@
+Genre Preference,active_n,inactive_n,churned_n,classified_n,active_pct,inactive_pct,churned_pct,small
+Self Help,258,121,66,445,58.0,27.2,14.8,False
+Fantasy,374,181,94,649,57.6,27.9,14.5,False
+Mystery,455,217,123,795,57.2,27.3,15.5,False
+Sci-Fi,277,116,91,484,57.2,24.0,18.8,False
+Business,224,120,58,402,55.7,29.9,14.4,False
+Unknown,30,17,7,54,55.6,31.5,13.0,True
+Romance,475,233,154,862,55.1,27.0,17.9,False
+Non Fiction,352,181,128,661,53.3,27.4,19.4,False
+Fiction,556,334,180,1070,52.0,31.2,16.8,False
