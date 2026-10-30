@@ -1,6 +1,6 @@
 # PRESENTATION SCRIPT — 5 Speakers · Target 6–7 minutes (hard limit 10)
 
-**Speaker order:** Ayana → Kasturi → Tridha → Vidushi → Trisha (Trisha closes with the live demo).
+**Speaker order:** Ayana → Kasturi → Tridha → Vidushi → Krisha (Krisha closes with the live demo).
 **Deck:** `outputs/eBook_Presentation.pptx` (18 slides — mapping below).
 **Every number in these scripts is verified** against the project files. Say them exactly.
 
@@ -14,7 +14,7 @@
 | 2 | **Kasturi** | stays on 2 | ~0:50 | Bridge: why a prototype, how this is a business problem |
 | 3 | **Tridha** | 3 | ~1:00 | The dataset — and the data we were NEVER given |
 | 4 | **Vidushi** | 4–5 | ~1:00 | The plan (pipeline) + how we cleaned the data |
-| 5 | **Trisha** | 6–17 fast, 18 + live app | ~2:30–3:00 | The analysis, the proof, the demo, what's missing, what's next |
+| 5 | **Krisha** | 6–17 fast, 18 + live app | ~2:30–3:00 | The analysis, the proof, the demo, what's missing, what's next |
 | | | | **≈ 6:30–7:20** | + transitions ≈ 7 min total |
 
 **Golden rules for ALL five speakers**
@@ -26,7 +26,7 @@
 Ayana → Kasturi: *"So we know the question. Kasturi will tell you what we decided to build, and why."*
 Kasturi → Tridha: *"But what can a prototype only as good as its data — Tridha shows what we actually received."*
 Tridha → Vidushi: *"Given that, here's how we prepared the data — Vidushi?"*
-Vidushi → Trisha: *"The data is ready. Now the actual analysis, and the live prototype — Trisha?"*
+Vidushi → Krisha: *"The data is ready. Now the actual analysis, and the live prototype — Krisha?"*
 
 ---
 
@@ -86,7 +86,7 @@ Now — the important part: **what this dataset does NOT contain.**
 
 The data we were directed to was supposed to include **login frequency, session duration, books accessed, recency, genre, and subscription tenure**. *None of those columns exist in the file.* The only subscription-related field is the 0/1 flag — which tells us **whether** someone subscribed, not whether they are **Active, Inactive, or Churned**. And the closest thing to behaviour, Average Monthly Spend — is *spend*, not engagement.
 
-That has real consequences, and we want to be upfront: with this file we **cannot** build recency-based scoring, **cannot** classify Active/Inactive/Churned, and **cannot** draw retention curves — those all need the missing engagement columns. What we *could* build is a **profile-based** analysis — using demographics, spend, and the flag — and that's exactly what we did, within those honest limits. Trisha will return to this at the end with our plan for if and when we get that data.
+That has real consequences, and we want to be upfront: with this file we **cannot** build recency-based scoring, **cannot** classify Active/Inactive/Churned, and **cannot** draw retention curves — those all need the missing engagement columns. What we *could* build is a **profile-based** analysis — using demographics, spend, and the flag — and that's exactly what we did, within those honest limits. Krisha will return to this at the end with our plan for if and when we get that data.
 
 So: given the data we have — Vidushi shows how we prepared it."
 
@@ -112,11 +112,11 @@ Step one in detail. Three problems in the raw file, three fixes:
 
 **Missing context columns** — we *derived* three new ones: **AgeGroup** — four birth cohorts; **IncomeBand** — income split into five equally sized groups, Q1 to Q5; and **State** — pulled out of the combined field, so 'Oakland-94601-California' gives us California.
 
-After cleaning: 16,404 clean rows, ready for analysis. And with that — Trisha takes you through the analysis and the live prototype."
+After cleaning: 16,404 clean rows, ready for analysis. And with that — Krisha takes you through the analysis and the live prototype."
 
 ---
 
-# SPEAKER 5 — TRISHA  ·  slides 6–18 + LIVE DEMO  ·  ~2:30–3:00
+# SPEAKER 5 — KRISHA  ·  slides 6–18 + LIVE DEMO  ·  ~2:30–3:00
 
 ## Part A — The analysis (slides 6–17, ~1:40 — move fast, linger where marked)
 
@@ -189,7 +189,7 @@ Thank you — we're happy to take questions."
 
 ---
 
-# TRISHA'S IN-DEPTH Q&A BANK
+# KRISHA'S IN-DEPTH Q&A BANK
 *(Ma'am will drill into whatever she finds on screen. These are the answers — rehearse, don't read.)*
 
 ## A. Correlation & statistics
@@ -298,7 +298,7 @@ Thank you — we're happy to take questions."
 
 ---
 
-## Emergency notes for Trisha
+## Emergency notes for Krisha
 
 - **Server down before demo?** Restart: `cd ~/Desktop/IR && /Users/krishasatishkadam/ebook-prototype/.venv/bin/python -m streamlit run src/app.py --server.headless true --server.port 8501` — then `open http://localhost:8501`. If it still fails, fall back to slides 10 and 15: *"These screenshots are from this exact app — the lookup result, and the KPIs changing under filters."*
 - **Out of time?** Cut slides 14 and 16 (tour + methodology screenshots) — keep 7, 9, 10, 11, 13 and the demo. Never cut Part C (what's missing) — that's the academic honesty she's looking for.
@@ -306,7 +306,7 @@ Thank you — we're happy to take questions."
 
 ---
 
-# Addendum — Trisha's simplified talk track (slides 6→end)
+# Addendum — Krisha's simplified talk track (slides 6→end)
 
 One flowing ~2-minute script, using only examples from our own data (no outside analogies).
 
