@@ -90,3 +90,9 @@ Delivered as outputs/v2/deck/ebook_subscriber_insights.pdf and .pptx; every numb
 is loaded from the report payload (no hardcoding), and the findings-slide layout
 and clipped tab screenshots were fixed and re-verified by rendering PDF pages back
 to images.
+
+## Stage 13 — 30 Oct 2026 (reviewer feedback: alignment, full Inactive rule, weight sensitivity)
+- Aligned the three numbers the reviewer saw disagreeing across email/poster/site: genre is now "26 raw spellings (23 after tidying)" everywhere, children at home is "2.15 vs 1.74", and recency above 365 days is "kept as-is (capture cap 400)". Reframed the all-901-Churned-in-Low observation as "expected by design" (recency is 40% of the score and also defines Churned) in `insights.md` and `CHEATSHEET.md`, and regenerated `final_report.html` from the corrected sources.
+- Stated the full Inactive rule (31-90 days, or 30 days or fewer with fewer than 1 login) everywhere the old "31-90 days" shorthand had crept in, including three hardcoded strings in `src/app.py` (status tooltip, Start Here hero card, KPI help) — the Methodology page and Glossary already had it.
+- New `src/v2_sensitivity_standalone.py`: re-scored the 5,422 classified subscribers under equal-thirds, recency-light (0.25) and recency-heavy (0.50) weights, re-cutting tiers from each set's own terciles. Baseline reproduces the shipped Tier column exactly (0 of 5,422 mismatches); alternatives keep 95.4-96.6% in the same tier, Spearman rho >= 0.997, and nobody moves more than one tier — but the Active-in-Low watchlist swings 29/11/2, so that count is not robust. Status is confirmed unaffected (3,001/1,520/901 constant) because it reads recency only.
+- Surfaced the sensitivity check on the Final Report page as section 5b (overview table, per-alternative migration tables, and the honest caveat that the watchlist count depends on the weights); outputs in `outputs/v2/sensitivity.csv` and `sensitivity_summary.md`.

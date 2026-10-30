@@ -241,6 +241,75 @@ def load_final_report():
 
 
 v2_all, sig_v2 = load_v2()
+
+
+@st.cache_data
+def load_sensitivity():
+    """Recompute the engagement score under four weight sets on the classified
+    subscribers, to show how far the Low/Medium/High tiers depend on the
+    approved 0.40/0.35/0.25 split.
+
+    Inputs are min-max normalised exactly as src/v2_score.py does it (recency
+    inverted; logins and session minutes scaled over all 5,455 rows, recency
+    skipping NaN) and are then held FIXED — only the weights change. Tiers are
+    re-cut from each set's own terciles, using the same pd.cut recipe.
+
+    Status is never recomputed here: it is defined on Days Since Last Activity
+    alone (plus the >=1-login guard) and reads no score term, so reweighting
+    cannot move anyone between Active / Inactive / Churned.
+    """
+    sets = [("Baseline (approved)", (0.40, 0.35, 0.25)),
+            ("Equal thirds", (1 / 3, 1 / 3, 1 / 3)),
+            ("Recency-light", (0.25, 0.45, 0.30)),
+            ("Recency-heavy", (0.50, 0.30, 0.20))]
+    tiers = ["Low", "Medium", "High"]
+    order = {"Low": 0, "Medium": 1, "High": 2}
+
+    pop = v2_all[v2_all["Status"].isin(STATUS_ORDER_P2)].copy()
+
+    def minmax(series):
+        return (series - series.min()) / (series.max() - series.min())
+
+    # normalise on the FULL 5,455-row basis, then keep the classified rows —
+    # this is what makes the baseline reproduce the shipped Tier column
+    r_s = minmax(v2_all["Days Since Last Activity"]).loc[pop.index]
+    l_s = minmax(v2_all["Avg Logins Per Month"]).loc[pop.index]
+    m_s = minmax(v2_all["Avg Session Minutes"]).loc[pop.index]
+
+    scored_sets = {}
+    for name, (wr, wl, wm) in sets:
+        score = (100 * (wr * (1 - r_s) + wl * l_s + wm * m_s)).round(2)
+        lo, hi = score.quantile([1 / 3, 2 / 3])
+        tier = pd.cut(score, bins=[-1, lo, hi, 101],
+                      labels=tiers).astype(str)
+        scored_sets[name] = {"weights": (wr, wl, wm), "score": score,
+                             "tier": tier, "lo": lo, "hi": hi}
+
+    base = scored_sets["Baseline (approved)"]
+    base_score = base["score"]
+    base_tier = base["tier"]
+    base_active_low = int(((base_tier == "Low") &
+                           (pop["Status"] == "Active")).sum())
+
+    rows = []
+    for name, d in scored_sets.items():
+        same = int((d["tier"] == base_tier).sum())
+        rho = base_score.corr(d["score"], method="spearman")
+        moved = [order[b] - order[a]
+                 for b, a in zip(d["tier"], base_tier)]
+        over1 = sum(1 for mv in moved if abs(mv) > 1)
+        act_low = int(((d["tier"] == "Low") &
+                       (pop["Status"] == "Active")).sum())
+        mig = pd.crosstab(pd.Series(base_tier, name="baseline"),
+                          pd.Series(d["tier"], name=name)
+                          ).reindex(index=tiers, columns=tiers, fill_value=0)
+        rows.append({"name": name, "weights": d["weights"],
+                     "same_pct": same / len(pop) * 100, "rho": rho,
+                     "over1": over1, "active_low": act_low, "mig": mig,
+                     "lo": d["lo"], "hi": d["hi"]})
+    return rows, base_active_low, len(pop)
+
+
 STATUS_ORDER_P2 = ["Active", "Inactive", "Churned"]
 STATUS_COLORS = {"Active": "#2a9d8f", "Inactive": "#e9c46a",
                  "Churned": "#e76f51", "Unclassified": "#adb5bd"}
@@ -256,7 +325,7 @@ V2_BOUNDS = {
 }
 
 PAGE_HELP = {
-    "status": "Active/Inactive/Churned from approved recency thresholds (≤30 / 31–90 / >90 days) — see Glossary.",
+    "status": "Active/Inactive/Churned from approved thresholds: Active = 30 days or fewer since last activity AND at least 1 login a month; Inactive = 31–90 days, or 30 days or fewer with fewer than 1 login a month (in practice 0 logins); Churned = more than 90 days. See Glossary.",
     "tier": "Low/Medium/High = tercile (equal third) of the engagement score — see Glossary.",
     "score": "0–100 weighted blend: recency 0.40, logins 0.35, session minutes 0.25 — see Glossary.",
     "recency": "Days Since Last Activity — how long since the last login; the core 'recency' signal — see Glossary.",
@@ -280,7 +349,8 @@ def page_start():
         (all {rep["total"]:,} subscribers in the engagement file).<br>
         <strong>{rep["kpis"][3]["value"]}</strong> are <strong>Churned</strong> — no activity for
         more than 90 days — and <strong>{rep["kpis"][2]["value"]}</strong> are
-        <strong>Inactive</strong>, quiet for 31–90 days and still win-backable.<br>
+        <strong>Inactive</strong>, quiet for 31–90 days — or 30 days or fewer with no
+        monthly logins — and still win-backable.<br>
         For each group the app prescribes what to do: keep Active readers engaged, win Inactive
         readers back before day 90, and run targeted win-back campaigns for Churned readers.
         </p></div>
@@ -402,7 +472,7 @@ def page_report():
     helps = [
         "Every subscriber in the engagement file (5,455 unique IDs after de-duplication).",
         PAGE_HELP["status"] + " Share of the classified rows; the 33 Unclassified are excluded.",
-        PAGE_HELP["status"] + " 31–90 days quiet — the win-back window.",
+        PAGE_HELP["status"] + " The win-back window: 31–90 days quiet, plus anyone at 30 days or fewer with no monthly logins.",
         PAGE_HELP["status"] + " Over 90 days quiet — the win-back target.",
     ]
     for c, kpi, h in zip(cols, rep["kpis"], helps):
@@ -461,6 +531,62 @@ def page_report():
                        "the earliest possible warning list.")
     except FileNotFoundError:
         pass
+
+    # 5b — sensitivity of the tiers to the weight split
+    st.markdown("**5b · Sensitivity — do the tiers depend on our weights?**")
+    try:
+        sens_rows, base_al, n_cls = load_sensitivity()
+    except Exception as exc:
+        sens_rows = None
+        st.info(f"Sensitivity check unavailable — {exc}.")
+    if sens_rows:
+        st.caption(
+            f"We re-ran the score on the {n_cls:,} classified subscribers under "
+            "four weight splits, holding the normalised inputs fixed and re-cutting "
+            "tiers from each set's own terciles. Status is defined on recency alone, "
+            "so it cannot move — only the tiers are being tested here.")
+        overview = pd.DataFrame([{
+            "Weight set": r["name"],
+            "Recency / Logins / Sessions":
+                " / ".join(f"{w:.2f}" for w in r["weights"]),
+            "Same tier as approved": f"{r['same_pct']:.1f}%",
+            "Rank correlation (Spearman)": round(r["rho"], 3),
+            "Moved >1 tier": f"{r['over1']:,}",
+            "Active in Low tier": f"{r['active_low']:,}",
+        } for r in sens_rows])
+        st.dataframe(overview, width="stretch", hide_index=True)
+
+        for r in sens_rows:
+            if r["name"] == "Baseline (approved)":
+                continue
+            with st.expander(
+                    f"Migration table — {r['name']} "
+                    f"({r['same_pct']:.1f}% keep their tier)"):
+                st.dataframe(r["mig"], width="stretch")
+
+        # honest caveat: the tiers are robust, the watchlist is not
+        al = [r["active_low"] for r in sens_rows]
+        st.markdown(
+            f'<div class="fr-note"><strong>What this means:</strong> the three '
+            f'tiers are robust — {min(r["same_pct"] for r in sens_rows[1:]):.0f}%'
+            f'–{max(r["same_pct"] for r in sens_rows[1:]):.0f}% of subscribers keep '
+            f'their tier and the rank correlation never drops below '
+            f'{min(r["rho"] for r in sens_rows[1:]):.3f}, with no subscriber moving '
+            f'more than one tier. The <strong>watchlist count above is not '
+            f'robust</strong>: those {base_al} Active-in-Low subscribers fall to '
+            f'{min(al)} or rise to {max(al)} under equally defensible weight splits, '
+            f'so treat the list as a ranked early-warning group rather than a fixed '
+            f'size.</div>',
+            unsafe_allow_html=True)
+        with st.expander("Technical details — method behind the sensitivity check"):
+            st.markdown(
+                "Inputs are min-max normalised exactly as in `src/v2_score.py` "
+                "(recency inverted; logins and session minutes scaled over all "
+                "5,455 rows) and held fixed — only the weights change. Tiers are "
+                "re-cut from each set's own 1/3 and 2/3 quantiles. Status is read "
+                "from `scored.csv` and never recomputed. Full per-subscriber output: "
+                "`outputs/v2/sensitivity.csv` and `outputs/v2/sensitivity_summary.md`, "
+                "generated by `src/v2_sensitivity_standalone.py`.")
 
     # 6 — high-value profile
     st.markdown("**6 · High-value subscriber profile (Active+High vs Churned)**")
