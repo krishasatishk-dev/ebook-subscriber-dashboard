@@ -93,7 +93,7 @@ age and cohort, and **the data has no cancellation dates**, so it cannot be read
 
 ## (d) Recommendations
 
-### Inactive (1,520 subscribers — 31-90 days since activity, median 58 days: the win-back window before day 90)
+### Inactive (1,520 subscribers — 31-90 days since activity, or 30 days or fewer with fewer than 1 login a month; median 58 days: the win-back window before day 90)
 
 1. **Trigger a re-engagement message the day a subscriber passes 30 days of silence**
    *(theme: early warning signs).* Finding: recency is the single strongest signal in the
