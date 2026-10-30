@@ -2,7 +2,7 @@
 
 ## Stage 0 — 23 Oct 2026
 - Copied the raw engagement file to `data/raw/eBook_Engagement.csv` without changing it.
-- Checked it: 5,500 rows, 5,455 unique customers (45 exact duplicates), 8 real genres hiding behind 23 spellings, some impossible numbers (logins up to 860 in a month, 6 negative "days since activity" values).
+- Checked it: 5,500 rows, 5,455 unique customers (45 exact duplicates), 8 real genres hiding behind 26 raw spellings (23 after tidying), some impossible numbers (logins up to 860 in a month, 6 negative "days since activity" values).
 - Wrote the proposed cleaning rules and Active/Inactive/Churned thresholds in `outputs/v2/methodology.md`.
 - Status: WAITING for approval of those thresholds before writing or running any v2 code.
 
@@ -63,7 +63,7 @@
 - All figures traced to outputs/v2 and data/processed/v2 only — nothing from Phase 1 files.
 
 ## Stage 9 — 23 Oct 23:59 (number audit)
-- Re-derived every figure in insights.md and CHEATSHEET.md straight from scored.csv, status_summary, significance_checks and the table folder — all match (status 3,001/1,520/901/33, medians 5/58/152, tier cuts 40.80/51.25, tier sizes 1,810/1,806/1,806, all 901 Churned in Low, Unclassified 32/0/1, r=0.88, r=0.37, 23 spellings).
+- Re-derived every figure in insights.md and CHEATSHEET.md straight from scored.csv, status_summary, significance_checks and the table folder — all match (status 3,001/1,520/901/33, medians 5/58/152, tier cuts 40.80/51.25, tier sizes 1,810/1,806/1,806, all 901 Churned in Low, Unclassified 32/0/1, r=0.88, r=0.37, 26 raw spellings (23 after tidying)).
 - Flagged that methodology section 4 still showed the pre-D1 counts (2,995/1,526) and added a pointer to section 5, which records the +6/−6 move to the current 3,001/1,520 — no numbers on disk disagree.
 - Tightened two genre sentences in insights.md so the churned-rate band explicitly excludes the small Unknown group (n=54, 13.0%) and the Fiction mix uses its real shares (18.5-20.0%).
 

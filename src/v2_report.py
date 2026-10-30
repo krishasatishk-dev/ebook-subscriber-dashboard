@@ -235,7 +235,8 @@ def load_report():
     # ── 7. strategy cards ─────────────────────────────────────────
     sec_d = _section(insights, "(d) Recommendations")
     rec_pat = re.compile(
-        r"(\d+)\. \*\*(.+?)\*\* \*\(themes?: (.+?)\)\.\* Finding: "
+        r"(\d+)\. \*\*(.+?)\*\* \*\(themes?: (.+?)\)\.\* "
+        r"(?:Finding|Expected by design): "
         r"(.+?)(?= \d+\. \*\*|\Z)")
 
     def parse_recs(text):
@@ -287,14 +288,20 @@ def load_report():
     d1 = _norm(meth[meth.index("D1"):meth.index("D1") + 700])
     dups = re.search(r"Drop (\d+) exact", c_rows["C1"]).group(1)
     uniq = re.search(r"→ ([\d,]+) unique", c_rows["C1"]).group(1)
-    spell = re.search(r"\((\d+) raw spellings", c_rows["C2"]).group(1)
+    # C2 now reads "26 raw spelling variants (23 after trimming spaces and
+    # ignoring case) collapse to these 8 genres" — both counts stay parsed
+    # out of methodology.md rather than hard-coded here.
+    spell = re.search(r"(\d+) raw spelling variants \((\d+) after trimming",
+                      c_rows["C2"])
     ngen = re.search(r"exactly (\d+) genres", c_rows["C2"]).group(1)
     med = re.search(r"medians used: \*\*logins ([\d.]+), session ([\d.]+), "
                     r"books ([\d.]+)\*\*", meth)
     line_clean = (
         f"Cleaning — approved rules C1–C10: drop {dups} exact duplicate rows → "
-        f"{uniq} unique IDs; map {spell} raw genre spellings to {ngen} canonical "
-        f"genres; invalid or missing recency never filled (→ {n_un} Unclassified); "
+        f"{uniq} unique IDs; {spell.group(1)} raw spelling variants "
+        f"({spell.group(2)} after trimming spaces and ignoring case) collapse "
+        f"to these {ngen} canonical genres; invalid or missing recency never "
+        f"filled (→ {n_un} Unclassified); "
         f"remaining behaviour blanks median-filled with an Imputed flag (D1: logins "
         f"{med.group(1)}, session {med.group(2)}, books {med.group(3)})."
     )

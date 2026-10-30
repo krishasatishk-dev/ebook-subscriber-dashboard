@@ -12,7 +12,7 @@
 - Classified: **5,422** = Active **3,001 (55.3%)** · Inactive **1,520 (28.0%)** · Churned **901 (16.6%)**; plus **33 Unclassified**.
 - Median days since activity: Active **5** · Inactive **58** · Churned **152**.
 - Mean logins / session minutes by status: Active **11.69 / 29.14** · Inactive **3.31 / 20.12** · Churned **1.54 / 14.15**.
-- High-value (Active + High tier): **1,803** vs Churned **901** — income **$99,810 vs $90,337**, spend **$94.1 vs $83.5**, age **62.2 vs 63.8**, children **2.1 vs 1.7** (all p<0.0056, but small: d 0.20-0.33, V≤0.09).
+- High-value (Active + High tier): **1,803** vs Churned **901** — income **$99,810 vs $90,337**, spend **$94.1 vs $83.5**, age **62.2 vs 63.8**, children **2.15 vs 1.74** (all p<0.0056, but small: d 0.20-0.33, V≤0.09).
 - Independent checks by tier: Books **4.1 → 9.1 → 20.2** and Tenure **16.7 → 19.9 → 20.6 months** (Low → High).
 - Null findings: genre Active rates span only **52.0-58.0%** (Fantasy p≈0.037 fails Bonferroni 0.0056); churned rate by tenure band is non-monotone (**16.5 / 22.4 / 16.5 / 12.1 / 12.0%**).
 
@@ -36,7 +36,7 @@ Score = weighted sum of the 0-1 inputs × 100. Unclassified rows use logins + se
 
 ## Tier cut points (terciles on classified rows)
 **Low ≤ 40.80 < Medium ≤ 51.25 < High** — sizes among classified: 1,810 / 1,806 / 1,806.
-All 901 Churned sit in the Low tier; Unclassified (scored separately) split 32 Low / 0 / 1 High.
+All 901 Churned sit in the Low tier; Unclassified (scored separately) split 32 Low / 0 / 1 High (by design: recency is 40% of the score and defines status, so this is expected, not an independent finding).
 
 ## The 5 questions you are most likely to be asked
 

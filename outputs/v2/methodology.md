@@ -1,7 +1,7 @@
 # v2 Engagement Methodology — APPROVED (23 Oct 2026)
 
 Cleaning rules C1–C10 and the Active/Inactive/Churned thresholds below were proposed here first
-and approved by Trisha on 23 Oct 2026, including the exact rationales quoted in section 2.
+and approved by Tridha on 23 Oct 2026, including the exact rationales quoted in section 2.
 These are the only rules the v2 pipeline may apply.
 
 Data: `data/raw/eBook_Engagement.csv` (5,500 rows, 7 columns, copied unmodified — raw is never edited).
@@ -13,7 +13,7 @@ Data: `data/raw/eBook_Engagement.csv` (5,500 rows, 7 columns, copied unmodified 
 | # | Rule | Why (one line) |
 |---|------|----------------|
 | C1 | Drop 45 exact duplicate rows, keep first → 5,455 unique IDs | Same rule as v1 segment dedupe; duplicates would double-count behaviour. |
-| C2 | Genre → trim, lowercase, canonical-map to exactly 8 genres: Business, Fantasy, Fiction, Mystery, Non Fiction, Romance, Sci-Fi, Self Help (23 raw spellings collapse to these) | Case/hyphen variants are the same genre; keeping 23 would split every genre stat. |
+| C2 | Genre → trim, lowercase, canonical-map to exactly 8 genres: Business, Fantasy, Fiction, Mystery, Non Fiction, Romance, Sci-Fi, Self Help (26 raw spelling variants (23 after trimming spaces and ignoring case) collapse to these 8 genres) | Case/hyphen variants are the same genre; keeping 26 would split every genre stat. |
 | C3 | Genre missing (54 rows) → label "Unknown", keep the row | A missing label doesn't invalidate the behaviour numbers; dropping them loses real subscribers. |
 | C4 | Days Since Last Activity negative (6 rows, −24 to −2) → treat as invalid, set to missing | A negative "days since" is a date error; inventing a value would be synthetic data. |
 | C5 | Days Since Last Activity missing or invalid (27 + 6 = 33 rows) → status "Unclassified", excluded from Active/Inactive/Churned counts | No recency means no honest way to place the row in any of the three buckets. |
@@ -30,7 +30,7 @@ Computed only from these definitions. Rationales in quotes are the approver's ow
 | Status | Rule | Why |
 |--------|------|-----|
 | **Active** | Days Since Last Activity ≤ 30 **AND** Avg Logins Per Month ≥ 1 | "30 days = one monthly subscription cycle, so someone who has not opened the app in a full cycle is not currently active; the ≥1 login/month condition is a data-consistency guard for rows with recent activity but zero average logins." |
-| **Inactive** | Everything between: 31–90 days, or ≤30 days with 0 average logins | Between one and three cycles — the habit has lapsed but it is not yet a sustained lapse. |
+| **Inactive** | 31-90 days since last activity, OR 30 days or fewer with fewer than 1 login per month (in practice 0 logins: 10 subscribers) | Between one and three cycles — the habit has lapsed but it is not yet a sustained lapse. |
 | **Churned** | Days Since Last Activity > 90 | "90 days = three cycles, a sustained lapse." |
 | **Unclassified** | Days Since Last Activity missing or invalid (33 rows) | "Recency decides the segment and I will not guess it." |
 

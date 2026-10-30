@@ -28,7 +28,7 @@ the **901 Churned**.
 In plain language: the typical high-value subscriber is a somewhat **wealthier, slightly
 younger, married-with-kids household reader** — earning about **$99,810** a year versus
 $90,337 for churned subscribers (+10%), spending **$94.1/month versus $83.5** (+13%), with
-**2.1 versus 1.7** children at home, at **62.2 versus 63.8** years of age. They are a little
+**2.15 versus 1.74** children at home, at **62.2 versus 63.8** years of age. They are a little
 more likely to work in **Management (21.5% vs 16.8%)**, hold a **Graduate Degree (18.0% vs
 13.2%)** and be born in the **1960s (55.1% vs 45.8%)** — all of these survive the Bonferroni
 bar.
@@ -118,9 +118,10 @@ age and cohort, and **the data has no cancellation dates**, so it cannot be read
    Active 11.69** — the decline is steep and long before day 90, so reopen contact using
    their historical reading pattern ("you used to read weekly") rather than a price offer.
 2. **Flag Low-tier subscribers approaching day 90 and intervene before churn happens**
-   *(theme: early warning signs).* Finding: **all 901 Churned sit in the Low tier
-   (score ≤ 40.80)** — nobody churns from Medium or High in this data — so a Low-tier member
-   entering the 31-90 day band is the pre-churn population to catch while still Inactive.
+   *(theme: early warning signs).* Expected by design: all 901 Churned sit in the Low tier
+   because recency is 40% of the score and also defines Churned status, so this is not an
+   independent finding. The practical point stands: a Low-tier subscriber entering the
+   31-90 day band is the pre-churn population to catch while still Inactive.
 3. **Give higher-value churned subscribers relevant, value-based reactivation**
    *(themes: relevant communication, personalised recommendations).* Finding: churned
    subscribers still average **$90,337 income and $83.5 monthly spend**, and the income/spend
