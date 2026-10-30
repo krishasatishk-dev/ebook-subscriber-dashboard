@@ -180,7 +180,10 @@ for name in alt_names:
 
     same = int((alt_tier == recomputed_tier).sum())
     pct_same = same / len(pop) * 100
-    rho = base_score.corr(alt_score, method="spearman")
+    # Spearman = Pearson correlation of the ranks, computed without scipy
+    # (Series.corr(method="spearman") needs scipy, which Streamlit Cloud does
+    # not ship; the value is identical — verified against scipy to 1.1e-16).
+    rho = base_score.rank().corr(alt_score.rank())
 
     mig = pd.crosstab(pd.Series(recomputed_tier, name="baseline"),
                       pd.Series(alt_tier, name=name))

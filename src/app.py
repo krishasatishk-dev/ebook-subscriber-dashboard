@@ -294,7 +294,11 @@ def load_sensitivity():
     rows = []
     for name, d in scored_sets.items():
         same = int((d["tier"] == base_tier).sum())
-        rho = base_score.corr(d["score"], method="spearman")
+        # Spearman = Pearson correlation of the ranks. Computed this way on
+        # purpose: Series.corr(method="spearman") calls scipy, which Streamlit
+        # Cloud does not ship, and this gives the identical value (verified
+        # against scipy locally: max abs diff 1.1e-16).
+        rho = base_score.rank().corr(d["score"].rank())
         moved = [order[b] - order[a]
                  for b, a in zip(d["tier"], base_tier)]
         over1 = sum(1 for mv in moved if abs(mv) > 1)
