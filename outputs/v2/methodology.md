@@ -1,7 +1,7 @@
 # v2 Engagement Methodology — APPROVED (23 Oct 2026)
 
 Cleaning rules C1–C10 and the Active/Inactive/Churned thresholds below were proposed here first
-and approved by Tridha on 23 Oct 2026, including the exact rationales quoted in section 2.
+and approved by Krisha on 23 Oct 2026, including the exact rationales quoted in section 2.
 These are the only rules the v2 pipeline may apply.
 
 Data: `data/raw/eBook_Engagement.csv` (5,500 rows, 7 columns, copied unmodified — raw is never edited).
