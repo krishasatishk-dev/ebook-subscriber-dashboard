@@ -1,5 +1,5 @@
 # v2_poster_figures.py — regenerate the HITA 2026 poster figures from scored.csv
-# Figures are written to poster/figures/ at 300 dpi with >=24 pt labels at printed
+# Figures are written to poster/figures/ at 350 dpi with >=24 pt labels at printed
 # size (each half-column figure is generated at 540 pt wide, matching its placement
 # in poster.tex, so matplotlib fontsize == printed pt).
 #
@@ -41,13 +41,13 @@ plt.rcParams.update({
     "xtick.color": GREY,
     "ytick.color": GREY,
     "figure.dpi": 300,
-    "savefig.dpi": 300,
+    "savefig.dpi": 350,
 })
 
 
 def save(fig, name):
     path = OUTDIR / name
-    fig.savefig(path, dpi=300, bbox_inches="tight", facecolor="white")
+    fig.savefig(path, dpi=350, bbox_inches="tight", facecolor="white")
     plt.close(fig)
     print("saved:", path.relative_to(ROOT))
 
@@ -61,21 +61,23 @@ def f1_status_doughnut(s):
     fig, ax = plt.subplots(figsize=(7.5, 6.2))
     wedges, _ = ax.pie(
         values, colors=colors, startangle=90, counterclock=False,
-        wedgeprops=dict(width=0.42, edgecolor="white", linewidth=3),
+        wedgeprops=dict(width=0.40, edgecolor="white", linewidth=3),
     )
     total = sum(values)
     for w, v, lab in zip(wedges, values, labels):
         ang = np.deg2rad((w.theta1 + w.theta2) / 2)
         x, y = np.cos(ang), np.sin(ang)
-        ax.annotate(f"{lab}\n{v:,} ({v / total * 100:.1f}%)",
-                    xy=(x * 0.79, y * 0.79), ha="center", va="center",
-                    fontsize=23, fontweight="bold", color="white",
-                    bbox=dict(boxstyle="round,pad=0.25", fc=NAVY, ec="none", alpha=0.85))
-    ax.text(0, 0.08, f"{total:,}", ha="center", va="center",
-            fontsize=34, fontweight="bold", color=NAVY)
-    ax.text(0, -0.16, "classified", ha="center", va="center", fontsize=22, color=GREY)
+        # name + count inside the ring; the ring is wide enough for both lines
+        # and the hole stays clear of text (total is in the figure title)
+        ax.annotate(f"{lab}\n{v:,}",
+                    xy=(x * 0.80, y * 0.80), ha="center", va="center",
+                    fontsize=26, fontweight="bold", color="white",
+                    bbox=dict(boxstyle="round,pad=0.26", fc=NAVY, ec="none"))
     ax.set_title("Status of subscribers (n = 5,422)", pad=14, fontweight="bold")
     ax.set_aspect("equal")
+    # room for the callout boxes that overhang the ring
+    ax.set_xlim(-1.38, 1.38)
+    ax.set_ylim(-1.30, 1.30)
     save(fig, "f1_status_doughnut.png")
 
 
@@ -106,6 +108,14 @@ def f2_tier_panels(cls):
         ax.set_ylabel(ylab, fontsize=22)
         ax.set_ylim(0, series.max() * 1.22)
         ax.spines[["top", "right"]].set_visible(False)
+
+    # rotate the three tier labels: at 23 pt they are wider than a quarter-panel
+    for ax in axes:
+        ax.tick_params(axis="x", labelsize=22, pad=2)
+        for lbl in ax.get_xticklabels():
+            lbl.set_rotation(28)
+            lbl.set_ha("right")
+            lbl.set_rotation_mode("anchor")
     fig.suptitle("Engagement score terciles track real behaviour (n = 5,422 classified)",
                  fontsize=25, fontweight="bold", color=NAVY, y=1.04)
     fig.tight_layout()
@@ -116,23 +126,26 @@ def f3_heatmap(s):
     """F3 — correlation heatmap of the four engagement metrics."""
     cols = ["Days Since Last Activity", "Avg Logins Per Month",
             "Avg Session Minutes", "Books Accessed"]
-    nice = ["Days since\nlast activity", "Logins\nper month",
-            "Session\nminutes", "Books\naccessed"]
+    # y axis has room for the full two-line names; the x axis does not, so it
+    # gets one-word tags (the caption expands "Recency")
+    y_nice = ["Days since\nlast activity", "Logins\nper month",
+              "Session\nminutes", "Books\naccessed"]
+    x_nice = ["Recency", "Logins", "Minutes", "Books"]
     corr = s[cols].corr()
-    corr.index = nice
-    corr.columns = nice
-    fig, ax = plt.subplots(figsize=(7.6, 6.4))
+    corr.index = y_nice
+    corr.columns = x_nice
+    fig, ax = plt.subplots(figsize=(6.6, 5.6))
     im = ax.imshow(corr.values, cmap="RdBu_r", vmin=-1, vmax=1)
-    for i in range(len(nice)):
-        for j in range(len(nice)):
+    for i in range(len(y_nice)):
+        for j in range(len(x_nice)):
             v = corr.values[i, j]
             ax.text(j, i, f"{v:.2f}", ha="center", va="center",
-                    fontsize=23, fontweight="bold",
+                    fontsize=24, fontweight="bold",
                     color="white" if abs(v) > 0.55 else NAVY)
-    ax.set_xticks(range(len(nice)), nice, fontsize=21)
-    ax.set_yticks(range(len(nice)), nice, fontsize=21)
-    cb = fig.colorbar(im, ax=ax, fraction=0.045, pad=0.03)
-    cb.ax.tick_params(labelsize=20)
+    ax.set_xticks(range(len(x_nice)), x_nice, fontsize=20)
+    ax.set_yticks(range(len(y_nice)), y_nice, fontsize=19)
+    # no colour bar: every cell is annotated, so the bar would only add clutter
+    # and steal the width the labels need at this printed size
     ax.set_title("Correlation of engagement metrics (n = 5,455)", pad=12,
                  fontsize=24, fontweight="bold", color=NAVY)
     save(fig, "f3_corr_heatmap.png")
